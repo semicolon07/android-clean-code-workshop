@@ -10,7 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 import training.com.cleancodeworkshop.R;
+import training.com.cleancodeworkshop.calculator.di.DaggerCalculatorComponent;
+import training.com.cleancodeworkshop.di.DaggerAppComponent;
 
 /**
  * Created by Semicolon07 on 2/9/2017 AD.
@@ -21,9 +25,11 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     private EditText secondNumberEditText;
     private TextView resultTextView;
     private Button plusButton,minusButton,multiplyButton,divideButton;
-    private CalculatorContract.Presenter presenter;
     private String firstNumber;
     private String secondNumber;
+
+    @Inject
+    CalculatorContract.Presenter presenter;
 
     public static CalculatorFragment newInstance(){
         CalculatorFragment fragment = new CalculatorFragment();
@@ -33,8 +39,16 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new CalculatorPresenter();
-        presenter.attachView(this);
+        initInjection();
+        //presenter = new CalculatorPresenter();
+        //presenter.attachView(this);
+    }
+
+    private void initInjection() {
+        DaggerCalculatorComponent.builder()
+                .appComponent(DaggerAppComponent.create())
+                .build()
+                .inject(this);
     }
 
     @Nullable
@@ -43,6 +57,12 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
         View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
         initInstances(rootView,savedInstanceState);
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.attachView(this);
     }
 
     private void initInstances(View rootView, Bundle savedInstanceState) {
