@@ -16,12 +16,11 @@ import training.com.cleancodeworkshop.R;
  * Created by Semicolon07 on 2/9/2017 AD.
  */
 
-public class CalculatorFragment extends Fragment implements CalculatorContract.View{
+public class CalculatorFragment extends Fragment{
     private EditText firstNumberEditText;
     private EditText secondNumberEditText;
     private TextView resultTextView;
     private Button plusButton,minusButton,multiplyButton,divideButton;
-    private CalculatorContract.Presenter presenter;
     private String firstNumber;
     private String secondNumber;
 
@@ -33,8 +32,6 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new CalculatorPresenter();
-        presenter.attachView(this);
     }
 
     @Nullable
@@ -72,7 +69,6 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
             switch (v.getId()){
                 case R.id.plus_button:
                     prepareInputText();
-                    presenter.plus(firstNumber,secondNumber);
                     break;
                 case R.id.minus_button:
                     break;
@@ -86,8 +82,4 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
         }
     };
 
-    @Override
-    public void showResult(String result) {
-        resultTextView.setText(result);
-    }
 }
