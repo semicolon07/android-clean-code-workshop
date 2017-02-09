@@ -11,7 +11,7 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void onPlusButtonClick(String num1, String num2) {
         int first = Integer.parseInt(num1);
         int second = Integer.parseInt(num2);
-        int sum = first + second;
+        int sum = first + second + 1;
         view.showResult(String.valueOf(sum));
     }
 
