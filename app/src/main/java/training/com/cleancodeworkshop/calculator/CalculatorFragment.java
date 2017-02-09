@@ -110,4 +110,9 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     public void showResult(String result) {
         resultTextView.setText(result);
     }
+
+    @Override
+    public void showLoadingProgress() {
+
+    }
 }

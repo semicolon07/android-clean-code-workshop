@@ -7,6 +7,7 @@ package training.com.cleancodeworkshop.calculator;
 public interface CalculatorContract {
     interface View {
         void showResult(String result);
+        void showLoadingProgress();
     }
     interface Presenter{
         void attachView(CalculatorContract.View view);

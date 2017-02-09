@@ -26,11 +26,11 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
 
     @Override
     public void plus(String num1, String num2) {
+        view.showLoadingProgress();
         int first = Integer.parseInt(num1);
         int second = Integer.parseInt(num2);
         int sum = first + second;
 
-        //view.showResult(String.valueOf(sum));
-        view.showResult(errorMessageFactory.createDefaultError());
+        view.showResult(String.valueOf(sum));
     }
 }
