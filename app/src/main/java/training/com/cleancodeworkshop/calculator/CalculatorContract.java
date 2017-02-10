@@ -1,5 +1,8 @@
 package training.com.cleancodeworkshop.calculator;
 
+import android.widget.EditText;
+import android.widget.TextView;
+
 import training.com.cleancodeworkshop.BasePresenter;
 
 /**
@@ -12,5 +15,8 @@ public interface CalculatorContract {
     }
     interface Presenter extends BasePresenter<CalculatorContract.View>{
         void onPlusButtonClick(String num1,String num2);
+        void onMinusButtonClick(String num1,String num2);
+
+        void onMultiplyButtonClick(EditText firstNumberEditText, TextView secondNumberEditText);
     }
 }

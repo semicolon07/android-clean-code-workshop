@@ -1,5 +1,6 @@
 package training.com.cleancodeworkshop.calculator;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,10 +10,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import training.com.cleancodeworkshop.R;
+import training.com.cleancodeworkshop.calculator.di.DaggerCalculatorComponent;
+import training.com.cleancodeworkshop.di.DaggerAppComponent;
 
 /**
  * Created by Semicolon07 on 2/9/2017 AD.
@@ -27,7 +33,15 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     TextView resultTextView;
     private String firstNumber;
     private String secondNumber;
-    private CalculatorContract.Presenter presenter;
+    private Listener listener;
+
+    public interface  Listener{
+        void nextPage();
+    }
+
+    @Inject
+    @Named("TestCalculatorPresenter")
+    CalculatorContract.Presenter presenter;
 
     public static CalculatorFragment newInstance() {
         CalculatorFragment fragment = new CalculatorFragment();
@@ -37,7 +51,11 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new CalculatorPresenter();
+        DaggerCalculatorComponent
+                .builder()
+                .appComponent(DaggerAppComponent.create())
+                .build()
+                .inject(this);
     }
 
     @Nullable
@@ -48,6 +66,23 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
         initInstances(rootView, savedInstanceState);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Listener)
+            listener = (Listener) context;
     }
 
     @Override
@@ -69,6 +104,8 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     @Override
     public void showResult(String result) {
         resultTextView.setText(result);
+        if(listener!=null)
+            listener.nextPage();
     }
 
     @Override
@@ -97,8 +134,12 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
                 presenter.onPlusButtonClick(firstNumber, secondNumber);
                 break;
             case R.id.minus_button:
+                prepareInputText();
+                presenter.onMinusButtonClick(firstNumber,secondNumber);
                 break;
             case R.id.multiply_button:
+                prepareInputText();
+                presenter.onMultiplyButtonClick(firstNumberEditText,secondNumberEditText);
                 break;
             case R.id.divide_button:
                 break;

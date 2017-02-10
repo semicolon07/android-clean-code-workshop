@@ -1,10 +1,20 @@
 package training.com.cleancodeworkshop.calculator;
 
+import android.widget.EditText;
+import android.widget.TextView;
+
+import javax.inject.Inject;
+
 /**
  * Created by Semicolon07 on 2/9/2017 AD.
  */
-
 public class CalculatorPresenter implements CalculatorContract.Presenter {
+
+    @Inject
+    public CalculatorPresenter(){
+
+    }
+
     private CalculatorContract.View view;
 
     @Override
@@ -13,6 +23,16 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
         int second = Integer.parseInt(num2);
         int sum = first + second + 1;
         view.showResult(String.valueOf(sum));
+    }
+
+    @Override
+    public void onMinusButtonClick(String num1, String num2) {
+
+    }
+
+    @Override
+    public void onMultiplyButtonClick(EditText firstNumberEditText, TextView secondNumberEditText) {
+
     }
 
 

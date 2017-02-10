@@ -1,11 +1,13 @@
 package training.com.cleancodeworkshop.calculator;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import training.com.cleancodeworkshop.R;
+import training.com.cleancodeworkshop.calculator.result.ResultActivity;
 
-public class CalculatorActivity extends AppCompatActivity {
+public class CalculatorActivity extends AppCompatActivity implements CalculatorFragment.Listener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,5 +19,11 @@ public class CalculatorActivity extends AppCompatActivity {
                     .add(R.id.contentContainer, CalculatorFragment.newInstance())
                     .commit();
         }
+    }
+
+    @Override
+    public void nextPage() {
+        Intent intent = new Intent(this, ResultActivity.class);
+        startActivity(intent);
     }
 }
