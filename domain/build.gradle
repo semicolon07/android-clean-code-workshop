@@ -1,0 +1,25 @@
+apply plugin: 'java'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+dependencies {
+    provided 'javax.annotation:jsr250-api:1.0'
+    provided 'com.google.dagger:dagger-compiler:2.8'
+
+    compile 'com.google.dagger:dagger:2.8'
+    compile "io.reactivex.rxjava2:rxjava:2.0.6"
+}

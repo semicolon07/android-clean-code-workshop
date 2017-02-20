@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.parceler.Parcels;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import training.com.cleancodeworkshop.R;
+import training.com.cleancodeworkshop.StudentModel;
 import training.com.cleancodeworkshop.calculator.di.DaggerCalculatorComponent;
 import training.com.cleancodeworkshop.di.DaggerAppComponent;
 
@@ -25,6 +29,7 @@ import training.com.cleancodeworkshop.di.DaggerAppComponent;
  */
 
 public class CalculatorFragment extends Fragment implements CalculatorContract.View {
+    private static final String ARG_STUDENT_MODEL = "ARG_STUDENT_MODEL";
     @BindView(R.id.firstNumber_editText)
     EditText firstNumberEditText;
     @BindView(R.id.secondNumber_editText)
@@ -34,23 +39,33 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     private String firstNumber;
     private String secondNumber;
     private Listener listener;
+    private StudentModel model;
 
-    public interface  Listener{
+
+    public interface Listener {
         void nextPage();
     }
 
     @Inject
-    @Named("TestCalculatorPresenter")
+    @Named("CalculatorPresenter")
     CalculatorContract.Presenter presenter;
 
-    public static CalculatorFragment newInstance() {
+    public static CalculatorFragment newInstance(StudentModel model) {
         CalculatorFragment fragment = new CalculatorFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARG_STUDENT_MODEL, Parcels.wrap(model));
+
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*model = Parcels.unwrap(getArguments().getParcelable(ARG_STUDENT_MODEL));
+        Toast.makeText(getContext(), "Name In fragment : "+model.getName(), Toast.LENGTH_LONG).show();*/
+
         DaggerCalculatorComponent
                 .builder()
                 .appComponent(DaggerAppComponent.create())
@@ -81,7 +96,7 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof Listener)
+        if (context instanceof Listener)
             listener = (Listener) context;
     }
 
@@ -102,10 +117,9 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
 
 
     @Override
-    public void showResult(String result) {
+    public void showResult(final String result) {
         resultTextView.setText(result);
-        if(listener!=null)
-            listener.nextPage();
+        //Toast.makeText(getContext(), "Value : " + result, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -135,14 +149,24 @@ public class CalculatorFragment extends Fragment implements CalculatorContract.V
                 break;
             case R.id.minus_button:
                 prepareInputText();
-                presenter.onMinusButtonClick(firstNumber,secondNumber);
+                presenter.onMinusButtonClick(firstNumber, secondNumber);
                 break;
             case R.id.multiply_button:
                 prepareInputText();
-                presenter.onMultiplyButtonClick(firstNumberEditText,secondNumberEditText);
+                presenter.onMultiplyButtonClick(firstNumberEditText, secondNumberEditText);
                 break;
             case R.id.divide_button:
                 break;
         }
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public Context context() {
+        return getContext();
     }
 }

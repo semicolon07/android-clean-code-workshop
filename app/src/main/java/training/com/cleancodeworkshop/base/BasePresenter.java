@@ -1,4 +1,4 @@
-package training.com.cleancodeworkshop;
+package training.com.cleancodeworkshop.base;
 
 /**
  * Created by Semicolon07 on 2/9/2017 AD.
