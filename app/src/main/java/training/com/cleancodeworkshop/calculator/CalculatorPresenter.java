@@ -7,8 +7,10 @@ import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableObserver;
 import training.com.cleancodeworkshop.UIThread;
+import training.com.cleancodeworkshop.data.repository.CalculatorDataRepository;
 import training.com.cleancodeworkshop.domain.PlusCalculateUseCase;
 import training.com.cleancodeworkshop.domain.executor.PostExecutionThread;
+import training.com.cleancodeworkshop.domain.repository.CalculatorRepository;
 
 /**
  * Created by Semicolon07 on 2/9/2017 AD.
@@ -26,7 +28,8 @@ public class CalculatorPresenter implements CalculatorContract.Presenter {
     public void onPlusButtonClick(final String num1, final String num2) {
         //Init Use Case
         PostExecutionThread uiThread = new UIThread();
-        PlusCalculateUseCase useCase = new PlusCalculateUseCase(uiThread);
+        CalculatorRepository repository = new CalculatorDataRepository();
+        PlusCalculateUseCase useCase = new PlusCalculateUseCase(uiThread,repository);
 
         PlusCalculateUseCase.RequestValue requestValue = new PlusCalculateUseCase.RequestValue();
         requestValue.setNum1(Integer.parseInt(num1));

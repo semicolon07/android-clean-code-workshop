@@ -1,11 +1,9 @@
 package training.com.cleancodeworkshop.domain;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.schedulers.Schedulers;
 import training.com.cleancodeworkshop.domain.executor.PostExecutionThread;
+import training.com.cleancodeworkshop.domain.repository.CalculatorRepository;
 
 /**
  * Created by Semicolon07 on 2/15/2017 AD.
@@ -14,24 +12,17 @@ import training.com.cleancodeworkshop.domain.executor.PostExecutionThread;
 public class PlusCalculateUseCase {
 
     private PostExecutionThread postExecutionThread;
+    private CalculatorRepository repository;
 
-    public PlusCalculateUseCase(PostExecutionThread postExecutionThread){
+    public PlusCalculateUseCase(PostExecutionThread postExecutionThread,
+                                CalculatorRepository repository){
         this.postExecutionThread = postExecutionThread;
+        this.repository = repository;
     }
 
     public void execute(final RequestValue requestValue, Observer observer){
-
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
-                int sum = requestValue.getNum1() + requestValue.getNum2();
-                if(sum == 0)
-                    e.onError(new Exception("Sum is zero."));
-
-                e.onNext(sum);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.newThread())
+        repository.plus(requestValue.getNum1(),requestValue.getNum2())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(postExecutionThread.getScheduler())
                 .subscribe(observer);
 
